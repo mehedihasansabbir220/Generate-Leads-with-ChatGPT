@@ -14,8 +14,7 @@ const App = ({ Component, pageProps }) => {
   const [fontcss, setFontcss] = useState();
   useEffect(() => {
     fetch(
-      `https://fonts.googleapis.com/css2?family=${pf}${
-        sf ? "&family=" + sf : ""
+      `https://fonts.googleapis.com/css2?family=${pf}${sf ? "&family=" + sf : ""
       }&display=swap`
     ).then((res) => res.text().then((css) => setFontcss(css)));
   }, [pf, sf]);
@@ -32,7 +31,24 @@ const App = ({ Component, pageProps }) => {
     }, 5000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.onload = () => {
+      window.voiceflow.chat.load({
+        verify: { projectID: '65ff1e50db0c0cc08731a865' },
+        url: 'https://general-runtime.voiceflow.com',
+        versionID: 'production'
+      });
+    };
+    script.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
+    document.getElementsByTagName('head')[0].appendChild(script);
 
+    return () => {
+      // Cleanup if needed
+      script.remove();
+    };
+  }, []);
   return (
     <>
       <Head>
